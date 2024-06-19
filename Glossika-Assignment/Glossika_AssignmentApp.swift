@@ -11,7 +11,7 @@ import SwiftUI
 struct Glossika_AssignmentApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }
