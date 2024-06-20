@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Color {
-    init(hex: String) {
+    static func hex(_ hex: String) -> Color {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int = UInt64()
         Scanner(string: hex).scanHexInt64(&int)
@@ -23,7 +23,7 @@ extension Color {
         default:
             (a, r, g, b) = (255, 0, 0, 0)
         }
-        self.init(
+        return self.init(
             .sRGB,
             red: Double(r) / 255,
             green: Double(g) / 255,

@@ -26,8 +26,9 @@ struct Story: Identifiable, Codable {
     let id: String
     let title: String
     let subTitle: String
-    let imageURL: String
     let author: String
+    let thumbnailUrl: String
+    let videoUrl: String
 }
 
 class HomeCollectionService {

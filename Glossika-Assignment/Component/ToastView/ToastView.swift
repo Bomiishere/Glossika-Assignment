@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 enum ToastViewType {
     case success
     case warning
     case error
-
+    
     var existDuration: Double {
         switch self {
         case .success:
@@ -36,18 +35,18 @@ enum ToastViewType {
             return 0.7
         }
     }
-
+    
     var backgroundColor: Color {
         switch self {
         case .success:
-            return Color.green.opacity(0.8)
+            return Color.green.opacity(0.9)
         case .warning:
-            return Color.yellow.opacity(0.8)
+            return Color.yellow.opacity(0.95)
         case .error:
-            return Color.red.opacity(0.8)
+            return Color.red.opacity(0.95)
         }
     }
-
+    
     var icon: String {
         switch self {
         case .success:
@@ -55,7 +54,7 @@ enum ToastViewType {
         case .warning:
             return "exclamationmark.triangle"
         case .error:
-            return "wrongwaysign"
+            return "xmark.octagon"
         }
     }
 }
@@ -65,22 +64,29 @@ struct ToastView: View {
     @State private var showToast: Bool = false
     
     let type: ToastViewType
-    let message: String
+    let message: String?
     
-    init(type: ToastViewType = .warning, message: String = "") {
+    init(type: ToastViewType = .warning, message: String? = nil) {
         self.type = type
         self.message = message
     }
     
     var body: some View {
-        VStack {
+        ZStack {
             if showToast {
                 HStack {
-                    Image(systemName: type.icon)
-                        .foregroundColor(.white)
-                    Text(message)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
+                    if let message = message, !message.isEmpty {
+                        Image(systemName: type.icon)
+                            .foregroundColor(.white)
+                            .padding(.leading, 4)
+                        Text(message)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 4)
+                    } else {
+                        Image(systemName: type.icon)
+                            .foregroundColor(.white)
+                    }
                 }
                 .padding()
                 .background(type.backgroundColor)
@@ -96,29 +102,33 @@ struct ToastView: View {
                     }
                 }
             }
-            Spacer()
         }
         .onAppear {
             withAnimation(.easeIn(duration: type.animationInDuration)) { // 入場動畫秒數
                 showToast = true
             }
         }
-        .padding()
     }
 }
 
-struct ContentView: View {
+struct PreviewView: View {
     var body: some View {
         VStack {
             ToastView(type: .success, message: "This is a Success")
             ToastView(type: .warning, message: "This is a warning")
             ToastView(type: .error, message: "This is a Error")
+            ToastView(type: .error)
+            ToastView(type: .warning, message: "")
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ZStack {
+            Color.black.edgesIgnoringSafeArea(.all)
+            PreviewView()
+        }
+        .previewLayout(.device)
     }
 }

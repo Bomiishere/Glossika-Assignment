@@ -14,8 +14,10 @@
 		B3723C532C2327A6008DC80E /* HomeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C522C2327A6008DC80E /* HomeCollection.swift */; };
 		B3723C572C23288A008DC80E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C562C23288A008DC80E /* HomeViewModel.swift */; };
 		B3723C5A2C232CBF008DC80E /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C592C232CBF008DC80E /* HTTPService.swift */; };
-		B3723C5E2C232FB0008DC80E /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C5D2C232FB0008DC80E /* ToastView.swift */; };
 		B3723C612C236019008DC80E /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C602C236019008DC80E /* Color+.swift */; };
+		B3723C652C242778008DC80E /* WebImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C642C242778008DC80E /* WebImageLoader.swift */; };
+		B3723C672C2427AA008DC80E /* WebImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C662C2427AA008DC80E /* WebImageView.swift */; };
+		B3723C6A2C24A8B0008DC80E /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3723C692C24A8B0008DC80E /* ToastView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +29,10 @@
 		B3723C522C2327A6008DC80E /* HomeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollection.swift; sourceTree = "<group>"; };
 		B3723C562C23288A008DC80E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B3723C592C232CBF008DC80E /* HTTPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPService.swift; sourceTree = "<group>"; };
-		B3723C5D2C232FB0008DC80E /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		B3723C602C236019008DC80E /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
+		B3723C642C242778008DC80E /* WebImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageLoader.swift; sourceTree = "<group>"; };
+		B3723C662C2427AA008DC80E /* WebImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageView.swift; sourceTree = "<group>"; };
+		B3723C692C24A8B0008DC80E /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +113,8 @@
 		B3723C5C2C232F8B008DC80E /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				B3723C5D2C232FB0008DC80E /* ToastView.swift */,
+				B3723C622C242758008DC80E /* ToastView */,
+				B3723C632C242765008DC80E /* WebImage */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -120,6 +125,23 @@
 				B3723C602C236019008DC80E /* Color+.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		B3723C622C242758008DC80E /* ToastView */ = {
+			isa = PBXGroup;
+			children = (
+				B3723C692C24A8B0008DC80E /* ToastView.swift */,
+			);
+			path = ToastView;
+			sourceTree = "<group>";
+		};
+		B3723C632C242765008DC80E /* WebImage */ = {
+			isa = PBXGroup;
+			children = (
+				B3723C642C242778008DC80E /* WebImageLoader.swift */,
+				B3723C662C2427AA008DC80E /* WebImageView.swift */,
+			);
+			path = WebImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,10 +216,12 @@
 			files = (
 				B3723C612C236019008DC80E /* Color+.swift in Sources */,
 				B3723C5A2C232CBF008DC80E /* HTTPService.swift in Sources */,
+				B3723C652C242778008DC80E /* WebImageLoader.swift in Sources */,
 				B3723C452C231760008DC80E /* HomeView.swift in Sources */,
 				B3723C432C231760008DC80E /* Glossika_AssignmentApp.swift in Sources */,
 				B3723C532C2327A6008DC80E /* HomeCollection.swift in Sources */,
-				B3723C5E2C232FB0008DC80E /* ToastView.swift in Sources */,
+				B3723C672C2427AA008DC80E /* WebImageView.swift in Sources */,
+				B3723C6A2C24A8B0008DC80E /* ToastView.swift in Sources */,
 				B3723C572C23288A008DC80E /* HomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
