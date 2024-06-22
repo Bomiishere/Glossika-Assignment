@@ -13,7 +13,6 @@ struct VideoView: View {
     @State private var player: AVPlayer?
     @State private var isVideoLoaded = false
     @State private var isTagged = false
-    @ObservedObject private var soundManager = SoundManager.shared
     
     var story: Story
     

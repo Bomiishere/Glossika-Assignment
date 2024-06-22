@@ -9,12 +9,13 @@ import SwiftUI
 import AVKit
 import Combine
 
-class CustomAVPlayerViewController: AVPlayerViewController {
+class CustomAVPlayerViewController: AVPlayerViewController, AVPlayerViewControllerDelegate {
     
     private var playPauseButton: UIButton!
     private var slider: UISlider!
     private var volumeButton: UIButton!
     private var controlContainerView: UIView!
+    private var fullScreenTapGesture: UITapGestureRecognizer!
     
     private let soundManager = SoundManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -24,6 +25,7 @@ class CustomAVPlayerViewController: AVPlayerViewController {
         self.player = player
         self.player?.volume = soundManager.volume
         self.showsPlaybackControls = false
+        self.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -40,6 +42,9 @@ class CustomAVPlayerViewController: AVPlayerViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
         view.addGestureRecognizer(tapGesture)
+        
+        fullScreenTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleFullScreenTap))
+        fullScreenTapGesture.numberOfTapsRequired = 1
     }
     
     deinit {
@@ -70,6 +75,26 @@ class CustomAVPlayerViewController: AVPlayerViewController {
     
     @objc private func handleTapGesture() {
         controlContainerView.isHidden.toggle()
+        if controlContainerView.isHidden {
+            view.removeGestureRecognizer(fullScreenTapGesture)
+        } else {
+            view.addGestureRecognizer(fullScreenTapGesture)
+        }
+    }
+    
+    @objc private func handleFullScreenTap() {
+        guard let rootViewController = UIApplication.shared.connectedScenes
+            .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
+            .first else { return }
+        
+        let playerViewController = AVPlayerViewController()
+        let newPlayer = AVPlayer(url: (player?.currentItem?.asset as? AVURLAsset)?.url ?? URL(string: "")!)
+        playerViewController.player = newPlayer
+        playerViewController.modalPresentationStyle = .fullScreen
+        playerViewController.delegate = self
+        rootViewController.present(playerViewController, animated: true) {
+            newPlayer.play()
+        }
     }
     
     //MARK: Private
