@@ -54,13 +54,13 @@ enum ToastViewType {
         case .warning:
             return "exclamationmark.triangle"
         case .error:
-            return "xmark.octagon"
+            return "xmark.circle.fill"
         }
     }
 }
 
 struct ToastView: View {
-    
+
     @State private var showToast: Bool = false
     
     let type: ToastViewType
@@ -103,6 +103,7 @@ struct ToastView: View {
                 }
             }
         }
+        .allowsHitTesting(false)
         .onAppear {
             withAnimation(.easeIn(duration: type.animationInDuration)) { // 入場動畫秒數
                 showToast = true

@@ -113,6 +113,7 @@ struct HomeView: View {
                     Spacer()
                     VStack {
                         ToastView(type: .error, message: error.message)
+                            .padding(.top)
                             .onAppear {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                     viewModel.error = nil
