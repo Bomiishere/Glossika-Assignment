@@ -29,6 +29,7 @@ struct Story: Identifiable, Codable {
     let author: String
     let thumbnailUrl: String
     let videoUrl: String
+    let videoThumbnailUrl: String
 }
 
 class HomeCollectionService {

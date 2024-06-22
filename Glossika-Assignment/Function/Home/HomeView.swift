@@ -8,46 +8,71 @@
 import SwiftUI
 
 struct HomeView: View {
-    
     @StateObject private var viewModel = HomeViewModel()
     
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
-                Spacer().frame(height: 24)
+                Spacer().frame(height: 16)
                 List {
-                    Section {
-                        Text("Home").font(.title).bold()
-                    }
-                    .listRowSeparator(.hidden)
-                    ForEach(viewModel.homeCollections, id: \.type) { collection in
-                        Section(
-                            header: Text(collection.title)
-                                .font(.title2)
-                                .backgroundStyle(.white)
-                                .padding(.bottom, 4)
-                        ) {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(alignment: .top, spacing: 20) {
-                                    ForEach(collection.stories) { story in
-                                        StoryView(story: story)
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
-                            .offset(CGSize(width: -8, height: 0))
+                    if viewModel.layoutType == .grid {
+                        Section {
+                            Text("Home").font(.title).bold()
                         }
                         .listRowSeparator(.hidden)
                     }
-                    HStack {
-                        Spacer().frame(height: 16)
-                        Image(systemName: "lasso")
-                            .foregroundColor(Color.black.opacity(0.3))
-                            .frame(width: 50, height: 50)
-                            .aspectRatio(contentMode: .fill)
-                        Spacer().frame(height: 0)
+                    ForEach(viewModel.homeCollections, id: \.type) { collection in
+                        Section(
+                            header:
+                                VStack(alignment: .leading) {
+                                    Text(collection.title)
+                                    .font(.title2)
+                                    .foregroundColor(.hex("454545"))
+                                    .backgroundStyle(.white)
+                                }
+                            ,
+                            footer:
+                                viewModel.layoutType == .video ? AnyView(HStack {
+                                    Spacer()
+                                    Image(systemName: "scribble.variable")
+                                        .foregroundColor(Color.black.opacity(0.35))
+                                    Spacer()
+                                }) : AnyView(EmptyView())
+                        ) {
+                            switch viewModel.layoutType {
+                            case .grid:
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(alignment: .top, spacing: 20) {
+                                        ForEach(collection.stories) { story in
+                                            StoryView(story: story)
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                                .offset(CGSize(width: -8, height: 0))
+                            case .video:
+                                ForEach(collection.stories) { story in
+                                    VideoView(story: story)
+                                        .listRowInsets(EdgeInsets()) // 移除邊距
+                                        .padding(.top, 8)
+                                        .listRowBackground(Color.clear)
+                                        .clipped()
+                                }
+                            }
+                        }
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowSeparator(.hidden)
+                    if viewModel.layoutType == .grid {
+                        HStack {
+                            Spacer().frame(height: 16)
+                            Image(systemName: "scribble.variable")
+                                .foregroundColor(Color.black.opacity(0.35))
+                                .frame(width: 50, height: 50)
+                                .aspectRatio(contentMode: .fill)
+                            Spacer().frame(height: 0)
+                        }
+                        .listRowSeparator(.hidden)
+                    }
                 }
                 .listStyle(.plain)
                 .background(Color.white)
@@ -55,14 +80,16 @@ struct HomeView: View {
                     leading:
                         HStack {
                             Button {
+                                viewModel.layoutType = .grid
                             } label: {
                                 Image(systemName: "square.stack.3d.down.forward.fill")
-                                    .foregroundColor(Color.black.opacity(0.72))
+                                    .foregroundColor(viewModel.layoutType == .grid ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
                             }
                             Button {
+                                viewModel.layoutType = .video
                             } label: {
                                 Image(systemName: "play.square.stack")
-                                    .foregroundColor(Color.black.opacity(0.72))
+                                    .foregroundColor(viewModel.layoutType == .video ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
                             }
                         }
                         .offset(CGSize(width: 0, height: 16))
@@ -99,6 +126,12 @@ struct HomeView: View {
     }
 }
 
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
+    }
+}
+
 struct StoryView: View {
     var story: Story
     
@@ -123,15 +156,9 @@ struct StoryView: View {
                 .lineLimit(1)
             Text(story.subTitle)
                 .font(.subheadline)
-                .foregroundColor(Color.hex("aeafb3"))
+                .foregroundColor(Color.secondary)
                 .lineLimit(3)
         }
         .frame(width: 120, alignment: .topLeading)
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
     }
 }

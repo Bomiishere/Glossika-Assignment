@@ -22,9 +22,11 @@ struct WebImageView: View {
             if let image = loader.image {
                 Image(uiImage: image)
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
             } else {
                 placeholder
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
             }
         }
         .onAppear(perform: loader.load)
