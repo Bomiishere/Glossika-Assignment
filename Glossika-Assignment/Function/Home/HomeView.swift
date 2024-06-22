@@ -74,6 +74,9 @@ struct HomeView: View {
                         .listRowSeparator(.hidden)
                     }
                 }
+                .refreshable {
+                    viewModel.fetchHomeCollections()
+                }
                 .listStyle(.plain)
                 .background(Color.white)
                 .navigationBarItems(
