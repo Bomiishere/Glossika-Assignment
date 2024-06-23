@@ -16,9 +16,9 @@ struct HomeView: View {
             NavigationStack {
                 Spacer().frame(height: 16)
                 List {
-                    if viewModel.layoutType == .grid {
+                    if viewModel.layout == .grid {
                         Section {
-                            Text("Home").font(.title).bold()
+                            Text("Home").font(.title).bold().offset(CGSize(width: 0, height: 8))
                         }
                         .listRowSeparator(.hidden)
                     }
@@ -32,10 +32,10 @@ struct HomeView: View {
                                             .foregroundColor(.hex("454545"))
                                             .backgroundStyle(.white)
                                     }
-                                    if (viewModel.layoutType == .grid && collection.type != .recent) {
+                                    if (viewModel.layout == .grid && collection.type != .recent) {
                                         HStack {
                                             Spacer()
-                                            Image(systemName:  "chevron.right")
+                                            Image(systemName: "chevron.right")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
                                                 .frame(width: 8)
@@ -47,7 +47,7 @@ struct HomeView: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    if (viewModel.layoutType == .grid && collection.type != .recent) {
+                                    if (viewModel.layout == .grid && collection.type != .recent) {
                                         withAnimation {
                                             viewModel.addWarningMessage("Coming Soon...")
                                         }
@@ -55,14 +55,14 @@ struct HomeView: View {
                                 }
                             ,
                             footer:
-                                viewModel.layoutType == .video ? AnyView(HStack {
+                                viewModel.layout == .video ? AnyView(HStack {
                                     Spacer()
                                     Image(systemName: "scribble.variable")
                                         .foregroundColor(Color.black.opacity(0.35))
                                     Spacer()
                                 }) : AnyView(EmptyView())
                         ) {
-                            switch viewModel.layoutType {
+                            switch viewModel.layout {
                             case .grid:
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(alignment: .top, spacing: 20) {
@@ -86,7 +86,7 @@ struct HomeView: View {
                         }
                         .listRowSeparator(.hidden)
                     }
-                    if viewModel.layoutType == .grid {
+                    if viewModel.layout == .grid {
                         HStack {
                             Spacer().frame(height: 16)
                             Image(systemName: "scribble.variable")
@@ -105,18 +105,43 @@ struct HomeView: View {
                 .background(Color.white)
                 .navigationBarItems(
                     leading:
-                        HStack {
-                            Button {
-                                viewModel.layoutType = .grid
-                            } label: {
-                                Image(systemName: "square.stack.3d.down.forward.fill")
-                                    .foregroundColor(viewModel.layoutType == .grid ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
+                        HStack(spacing: 16) {
+                            Button(action: {
+                                withAnimation {
+                                    viewModel.layout = .grid
+                                }
+                            }) {
+                                VStack {
+                                    Image(systemName: "square.stack.3d.down.forward.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .foregroundColor(viewModel.layout == .grid ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
+                                        .frame(width: viewModel.layout == .grid ? 32 : 24, height: viewModel.layout == .grid ? 32 : 24)
+                                    
+                                    if viewModel.layout == .grid {
+                                        Color.black.opacity(0.7)
+                                            .frame(height: 3)
+                                            .padding(.bottom, 0)
+                                    }
+                                }
                             }
-                            Button {
-                                viewModel.layoutType = .video
-                            } label: {
-                                Image(systemName: "play.square.stack")
-                                    .foregroundColor(viewModel.layoutType == .video ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
+                            
+                            Button(action: {
+                                viewModel.layout = .video
+                            }) {
+                                VStack {
+                                    Image(systemName: "play.square.stack")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .foregroundColor(viewModel.layout == .video ? Color.black.opacity(0.72) : Color.gray.opacity(0.5))
+                                        .frame(width: viewModel.layout == .video ? 32 : 24, height: viewModel.layout == .video ? 32 : 24)
+                                    
+                                    if viewModel.layout == .video {
+                                        Color.black.opacity(0.7)
+                                            .frame(height: 3)
+                                            .padding(.bottom, 0)
+                                    }
+                                }
                             }
                         }
                         .offset(CGSize(width: 0, height: 16))
@@ -132,12 +157,12 @@ struct HomeView: View {
                         .offset(CGSize(width: -8, height: 8))
                 )
                 .onAppear {
-                    if self.viewModel.layoutType == .grid {
+                    if self.viewModel.layout == .grid {
                         viewModel.fetchHomeCollections()
                     }
                 }
             }
-            VStack() {
+            VStack {
                 Spacer()
                 ForEach(viewModel.successMessages.indices, id: \.self) { index in
                     HStack {

@@ -16,7 +16,7 @@ enum HomeLayout {
 class HomeViewModel: ObservableObject {
     
     @Published var homeCollections: [HomeCollection] = []
-    @Published var layoutType: HomeLayout = .grid
+    @Published var layout: HomeLayout = .grid
     @Published var errorMessages: [String] = []
     @Published var warningMessages: [String] = []
     @Published var successMessages: [String] = []
