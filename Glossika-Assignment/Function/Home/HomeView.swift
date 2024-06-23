@@ -158,7 +158,9 @@ struct HomeView: View {
                         .offset(CGSize(width: 0, height: 16))
                     , trailing:
                         Button {
-                            
+                            withAnimation {
+                                viewModel.addWarningMessage("bududu")
+                            }
                         } label: {
                             Image("bududu-min")
                                 .resizable()
