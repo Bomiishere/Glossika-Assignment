@@ -19,12 +19,17 @@ class HomeViewModel: ObservableObject {
     @Published var layoutType: HomeLayout = .grid
     @Published var error: HTTPServiceError? = nil
     @Published var warning: String? = nil
+    @Published var success: String? = nil
     
     private var cancellables: Set<AnyCancellable> = []
     private let homeCollectionService = HomeCollectionService()
     
     init() {
         loadMockData()
+    }
+    
+    func toggleTag(_ isTagged: Bool) {
+        self.success = isTagged ? "Saved" : "Removed"
     }
     
     func fetchHomeCollections() {
@@ -43,6 +48,7 @@ class HomeViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
+    
     func loadMockData() {
         let mockData: [HomeCollection] = [
             HomeCollection(type: .recent, title: "Recent", stories: [

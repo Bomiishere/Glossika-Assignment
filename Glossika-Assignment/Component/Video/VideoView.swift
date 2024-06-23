@@ -13,6 +13,7 @@ struct VideoView: View {
     @State private var player: AVPlayer?
     @State private var isVideoLoaded = false
     @State private var isTagged = false
+    @EnvironmentObject var homeViewModel: HomeViewModel
     
     var story: Story
     
@@ -57,23 +58,26 @@ struct VideoView: View {
             .aspectRatio(1, contentMode: .fit)
             
             HStack(alignment: .top) {
-                Text(story.subTitle)
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .padding(.leading)
-                Spacer()
-                Button {
-                    isTagged.toggle()
-                } label: {
-                    Image(systemName: isTagged ? "tag.fill" : "tag")
-                        .resizable()
-                        .foregroundColor(.black.opacity(0.7))
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fit)
-                        .padding(.horizontal, 4)
-                        .shadow(color: Color.gray.opacity(0.35), radius: 2, x: 2, y: 2)
+                HStack {
+                    Text(story.subTitle)
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .padding(.leading)
                 }
-                .padding(.horizontal, 8)
+                .padding(.top, 4)
+                Spacer()
+                Image(systemName: isTagged ? "tag.fill" : "tag")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.black.opacity(0.7))
+                    .frame(width: 28, height: 28)
+                    .padding(.horizontal, 4)
+                    .shadow(color: Color.gray.opacity(0.35), radius: 2, x: 2, y: 2)
+                    .onTapGesture {
+                        isTagged.toggle()
+                        homeViewModel.toggleTag(isTagged)
+                    }
+                    .padding(.horizontal, 8)
             }
             .padding(.bottom, 0)
             VStack(alignment: .leading) {

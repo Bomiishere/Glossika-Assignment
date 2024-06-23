@@ -78,6 +78,7 @@ struct HomeView: View {
                                         .padding(.top, 8)
                                         .listRowBackground(Color.clear)
                                         .clipped()
+                                        .environmentObject(viewModel)
                                 }
                             }
                         }
@@ -167,6 +168,15 @@ struct HomeView: View {
                             .onAppear {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                     viewModel.warning = nil
+                                }
+                            }
+                    }
+                    if let success = viewModel.success {
+                        ToastView(type: .success, message: success)
+                            .padding(.top)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                    viewModel.success = nil
                                 }
                             }
                     }
