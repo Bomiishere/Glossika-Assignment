@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    
     @StateObject private var viewModel = HomeViewModel()
     
     var body: some View {
@@ -24,11 +25,31 @@ struct HomeView: View {
                     ForEach(viewModel.homeCollections, id: \.type) { collection in
                         Section(
                             header:
-                                VStack(alignment: .leading) {
-                                    Text(collection.title)
-                                    .font(.title2)
-                                    .foregroundColor(.hex("454545"))
-                                    .backgroundStyle(.white)
+                                ZStack(alignment: .leading) {
+                                    HStack(alignment: .top) {
+                                        Text(collection.title)
+                                            .font(.title2)
+                                            .foregroundColor(.hex("454545"))
+                                            .backgroundStyle(.white)
+                                    }
+                                    if (viewModel.layoutType == .grid && collection.type != .recent) {
+                                        HStack {
+                                            Spacer()
+                                            Image(systemName:  "chevron.right")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 8)
+                                                .foregroundColor(.black.opacity(0.7))
+                                                .padding(.horizontal, 4)
+                                                .shadow(color: Color.gray.opacity(0.35), radius: 2, x: 2, y: 2)
+                                        }
+                                        
+                                    }
+                                }
+                                .onTapGesture {
+                                    if (viewModel.layoutType == .grid && collection.type != .recent) {
+                                        viewModel.warning = "Coming Soon..."
+                                    }
                                 }
                             ,
                             footer:
@@ -108,7 +129,9 @@ struct HomeView: View {
                         .offset(CGSize(width: -8, height: 8))
                 )
                 .onAppear {
-                    viewModel.fetchHomeCollections()
+                    if self.viewModel.layoutType == .grid {
+                        viewModel.fetchHomeCollections()
+                    }
                 }
             }
             if let error = viewModel.error {
@@ -125,6 +148,30 @@ struct HomeView: View {
                     }
                     Spacer()
                 }
+            }
+            HStack {
+                Spacer()
+                VStack {
+                    if let error = viewModel.error {
+                        ToastView(type: .error, message: error.message)
+                            .padding(.top)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                    viewModel.error = nil
+                                }
+                            }
+                    }
+                    if let warning = viewModel.warning {
+                        ToastView(type: .warning, message: warning)
+                            .padding(.top)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                    viewModel.warning = nil
+                                }
+                            }
+                    }
+                }
+                Spacer()
             }
         }
     }
