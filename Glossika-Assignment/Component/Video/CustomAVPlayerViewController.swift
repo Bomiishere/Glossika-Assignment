@@ -47,6 +47,16 @@ class CustomAVPlayerViewController: AVPlayerViewController, AVPlayerViewControll
         fullScreenTapGesture.numberOfTapsRequired = 1
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        player?.play()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        player?.pause()
+    }
+    
     deinit {
         cancellables.forEach { $0.cancel() }
     }
@@ -99,6 +109,12 @@ class CustomAVPlayerViewController: AVPlayerViewController, AVPlayerViewControll
     
     //MARK: Private
     private func addObservers() {
+        
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: .main) { _ in
+            self.player?.seek(to: .zero)
+            self.player?.play()
+        }
+        
         soundManager.$volume.sink { [weak self] newVolume in
             if let `self` = self {
                 self.player?.volume = newVolume

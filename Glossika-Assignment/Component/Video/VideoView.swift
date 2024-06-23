@@ -104,19 +104,14 @@ struct VideoView: View {
     }
     
     private func loadVideoAsync(url: URL) {
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .userInitiated).async {
             let asset = AVAsset(url: url)
             let playerItem = AVPlayerItem(asset: asset)
             DispatchQueue.main.async {
                 let avPlayer = AVPlayer(playerItem: playerItem)
-                avPlayer.play() // 自動播放
                 self.player = avPlayer
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemNewAccessLogEntry, object: avPlayer.currentItem, queue: .main) { _ in
                     self.isVideoLoaded = true
-                }
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: avPlayer.currentItem, queue: .main) { _ in
-                    avPlayer.seek(to: .zero)
-                    avPlayer.play()
                 }
             }
         }

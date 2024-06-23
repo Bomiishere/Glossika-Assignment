@@ -29,20 +29,22 @@ class WebImageLoader: ObservableObject {
             return
         }
         
-        cancellable = URLSession.shared.dataTaskPublisher(for: request)
-            .map { (data, response) -> UIImage? in
-                if let image = UIImage(data: data) {
-                    let cachedData = CachedURLResponse(response: response, data: data)
-                    self.cache.storeCachedResponse(cachedData, for: request)
-                    return image
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.cancellable = URLSession.shared.dataTaskPublisher(for: request)
+                .map { (data, response) -> UIImage? in
+                    if let image = UIImage(data: data) {
+                        let cachedData = CachedURLResponse(response: response, data: data)
+                        self.cache.storeCachedResponse(cachedData, for: request)
+                        return image
+                    }
+                    return nil
                 }
-                return nil
-            }
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.image = $0
-            }
+                .replaceError(with: nil)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.image = $0
+                }
+        }
     }
 
     deinit {
