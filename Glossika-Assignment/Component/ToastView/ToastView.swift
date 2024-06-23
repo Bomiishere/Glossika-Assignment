@@ -12,30 +12,6 @@ enum ToastViewType {
     case warning
     case error
     
-    var existDuration: Double {
-        switch self {
-        case .success:
-            return 1.5
-        case .warning:
-            return 3.0
-        case .error:
-            return 5.0
-        }
-    }
-    
-    var animationInDuration: Double {
-        return 0.3
-    }
-    
-    var animationOutDuration: Double {
-        switch self {
-        case .success:
-            return 0.5
-        case .warning, .error:
-            return 0.7
-        }
-    }
-    
     var backgroundColor: Color {
         switch self {
         case .success:
@@ -60,7 +36,7 @@ enum ToastViewType {
 }
 
 struct ToastView: View {
-
+    
     @State private var showToast: Bool = false
     
     let type: ToastViewType
@@ -73,42 +49,25 @@ struct ToastView: View {
     
     var body: some View {
         ZStack {
-            if showToast {
-                HStack {
-                    if let message = message, !message.isEmpty {
-                        Image(systemName: type.icon)
-                            .foregroundColor(.white)
-                            .padding(.leading, 4)
-                        Text(message)
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 4)
-                    } else {
-                        Image(systemName: type.icon)
-                            .foregroundColor(.white)
-                    }
-                }
-                .padding()
-                .background(type.backgroundColor)
-                .cornerRadius(10)
-                // 入場動畫：上方+淡入, 離場動畫：淡出
-                .transition(.asymmetric(insertion: .move(edge: .top).combined(with: .opacity),
-                                        removal: .opacity))
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + type.existDuration) {
-                        withAnimation(.easeOut(duration: type.animationOutDuration)) { // 離場動畫秒數
-                            showToast = false
-                        }
-                    }
+            HStack {
+                if let message = message, !message.isEmpty {
+                    Image(systemName: type.icon)
+                        .foregroundColor(.white)
+                        .padding(.leading, 4)
+                    Text(message)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 4)
+                } else {
+                    Image(systemName: type.icon)
+                        .foregroundColor(.white)
                 }
             }
+            .padding()
+            .background(type.backgroundColor)
+            .cornerRadius(10)
         }
         .allowsHitTesting(false)
-        .onAppear {
-            withAnimation(.easeIn(duration: type.animationInDuration)) { // 入場動畫秒數
-                showToast = true
-            }
-        }
     }
 }
 

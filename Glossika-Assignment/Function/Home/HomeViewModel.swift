@@ -17,9 +17,9 @@ class HomeViewModel: ObservableObject {
     
     @Published var homeCollections: [HomeCollection] = []
     @Published var layoutType: HomeLayout = .grid
-    @Published var error: HTTPServiceError? = nil
-    @Published var warning: String? = nil
-    @Published var success: String? = nil
+    @Published var errorMessages: [String] = []
+    @Published var warningMessages: [String] = []
+    @Published var successMessages: [String] = []
     
     private var cancellables: Set<AnyCancellable> = []
     private let homeCollectionService = HomeCollectionService()
@@ -29,7 +29,30 @@ class HomeViewModel: ObservableObject {
     }
     
     func toggleTag(_ isTagged: Bool) {
-        self.success = isTagged ? "Saved" : "Removed"
+        withAnimation {
+            self.addSuccessMessage(isTagged ? "Saved" : "Removed")
+        }
+    }
+    
+    private func addSuccessMessage(_ message: String) {
+        self.successMessages.append(message)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.successMessages.remove(at: 0)
+        }
+    }
+    
+    func addWarningMessage(_ message: String) {
+        self.warningMessages.append(message)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.warningMessages.remove(at: 0)
+        }
+    }
+    
+    private func addErrorMessage(_ message: String) {
+        self.errorMessages.append(message)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.errorMessages.remove(at: 0)
+        }
     }
     
     func fetchHomeCollections() {
@@ -37,8 +60,8 @@ class HomeViewModel: ObservableObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    DispatchQueue.main.async {
-                        self.error = error
+                    withAnimation {
+                        self.addErrorMessage(error.message)
                     }
                 case .finished:
                     break

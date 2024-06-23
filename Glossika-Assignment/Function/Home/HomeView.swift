@@ -48,7 +48,9 @@ struct HomeView: View {
                                 }
                                 .onTapGesture {
                                     if (viewModel.layoutType == .grid && collection.type != .recent) {
-                                        viewModel.warning = "Coming Soon..."
+                                        withAnimation {
+                                            viewModel.addWarningMessage("Coming Soon...")
+                                        }
                                     }
                                 }
                             ,
@@ -135,53 +137,37 @@ struct HomeView: View {
                     }
                 }
             }
-            if let error = viewModel.error {
-                HStack {
-                    Spacer()
-                    VStack {
-                        ToastView(type: .error, message: error.message)
-                            .padding(.top)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                    viewModel.error = nil
-                                }
-                            }
+            VStack() {
+                Spacer()
+                ForEach(viewModel.successMessages.indices, id: \.self) { index in
+                    HStack {
+                        Spacer()
+                        ToastView(type: .success, message: viewModel.successMessages[index])
+                            .padding(.bottom)
+                        Spacer()
                     }
-                    Spacer()
                 }
+                .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
             }
-            HStack {
-                Spacer()
-                VStack {
-                    if let error = viewModel.error {
-                        ToastView(type: .error, message: error.message)
+            VStack() {
+                ForEach(viewModel.errorMessages.indices, id: \.self) { index in
+                    HStack {
+                        Spacer()
+                        ToastView(type: .error, message: viewModel.errorMessages[index])
                             .padding(.top)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                    viewModel.error = nil
-                                }
-                            }
-                    }
-                    if let warning = viewModel.warning {
-                        ToastView(type: .warning, message: warning)
-                            .padding(.top)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                    viewModel.warning = nil
-                                }
-                            }
-                    }
-                    if let success = viewModel.success {
-                        ToastView(type: .success, message: success)
-                            .padding(.top)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                    viewModel.success = nil
-                                }
-                            }
+                        Spacer()
                     }
                 }
-                Spacer()
+                .transition(.asymmetric(insertion: .move(edge: .top).combined(with: .opacity), removal: .opacity))
+                ForEach(viewModel.warningMessages.indices, id: \.self) { index in
+                    HStack {
+                        Spacer()
+                        ToastView(type: .warning, message: viewModel.warningMessages[index])
+                            .padding(.top)
+                        Spacer()
+                    }
+                }
+                .transition(.asymmetric(insertion: .move(edge: .top).combined(with: .opacity), removal: .opacity))
             }
         }
     }
