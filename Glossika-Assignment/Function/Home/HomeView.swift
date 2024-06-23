@@ -18,7 +18,18 @@ struct HomeView: View {
                 List {
                     if viewModel.layout == .grid {
                         Section {
-                            Text("Home").font(.title).bold().offset(CGSize(width: 0, height: 8))
+                            Text("Welcome,").font(.title).bold().offset(CGSize(width: 0, height: 8))
+                        }
+                        .listRowSeparator(.hidden)
+                        Section {
+                            VStack(alignment: .leading) {
+                                Spacer().frame(height: 16)
+                                HStack {
+                                    AdvertisementView()
+                                }
+                                .frame(height: 250)
+                            }
+                            .listRowInsets(EdgeInsets())
                         }
                         .listRowSeparator(.hidden)
                     }
@@ -76,7 +87,7 @@ struct HomeView: View {
                             case .video:
                                 ForEach(collection.stories) { story in
                                     VideoView(story: story)
-                                        .listRowInsets(EdgeInsets()) // 移除邊距
+                                        .listRowInsets(EdgeInsets())
                                         .padding(.top, 8)
                                         .listRowBackground(Color.clear)
                                         .clipped()
